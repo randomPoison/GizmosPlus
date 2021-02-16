@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 namespace Zchfvy.Plus {
     /// <summary>
@@ -229,6 +228,7 @@ namespace Zchfvy.Plus {
             _polygonInner(points.Reverse().ToArray());
         }
         private static void _polygonInner(Vector3[] points) {
+#if UNITY_EDITOR
             Mesh m = new Mesh();
             m.SetVertices(points.ToList()); 
             m.SetNormals(points.Select(p=> Vector3.up).ToList());
@@ -243,6 +243,11 @@ namespace Zchfvy.Plus {
                     0);
 
             Gizmos.DrawMesh(m, Vector3.zero, Quaternion.identity, Vector3.one);
+
+            UnityEditor.EditorApplication.delayCall += () => {
+                Object.DestroyImmediate(m);
+            };
+#endif
         }
 
         /// <summary>
